@@ -8,8 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalSlides = slides.length;
 
     let currentIndex = 0;
-    let startY = 0;
-    let currentY = 0;
+    let startX = 0;
+    let currentX = 0;
     let isDragging = false;
     let isAnimating = false;
 
@@ -100,15 +100,15 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleStart(e) {
         if (isAnimating) return;
         isDragging = true;
-        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
+        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
     }
 
     // Touch/Mouse move
     function handleMove(e) {
         if (!isDragging || isAnimating) return;
 
-        currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
-        const diff = startY - currentY;
+        currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
+        const diff = startX - currentX;
 
         // Prevent default scroll behavior
         if (Math.abs(diff) > 10) {
@@ -121,15 +121,15 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isDragging) return;
         isDragging = false;
 
-        const diff = startY - currentY;
+        const diff = startX - currentX;
         const threshold = 50; // Minimum swipe distance in pixels
 
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
-                // Swiped up - next slide
+                // Swiped left - next slide
                 nextSlide();
             } else {
-                // Swiped down - previous slide
+                // Swiped right - previous slide
                 prevSlide();
             }
         }
@@ -153,12 +153,12 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isAnimating) return;
 
         switch(e.key) {
-            case 'ArrowDown':
+            case 'ArrowRight':
             case 'PageDown':
                 e.preventDefault();
                 nextSlide();
                 break;
-            case 'ArrowUp':
+            case 'ArrowLeft':
             case 'PageUp':
                 e.preventDefault();
                 prevSlide();
