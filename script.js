@@ -107,13 +107,8 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleMove(e) {
         if (!isDragging || isAnimating) return;
 
+        e.preventDefault();
         currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-        const diff = startX - currentX;
-
-        // Prevent default scroll behavior
-        if (Math.abs(diff) > 10) {
-            e.preventDefault();
-        }
     }
 
     // Touch/Mouse end
@@ -125,11 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const threshold = 50; // Minimum swipe distance in pixels
 
         if (Math.abs(diff) > threshold) {
-            if (diff < 0) {
-                // Swiped left - next slide
+            if (diff > 0) {
+                // Swiped right - next slide
                 nextSlide();
             } else {
-                // Swiped right - previous slide
+                // Swiped left - previous slide
                 prevSlide();
             }
         }
