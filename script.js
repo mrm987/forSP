@@ -48,19 +48,24 @@ document.addEventListener('DOMContentLoaded', function() {
         if (isAnimating || index < 0 || index >= totalSlides) return;
 
         isAnimating = true;
-
-        // Remove active class from current slide
-        slides[currentIndex].classList.remove('active');
-        if (index < currentIndex) {
-            slides[currentIndex].classList.add('prev');
-        }
-
-        // Update current index
+        const oldIndex = currentIndex;
         currentIndex = index;
 
-        // Add active class to new slide
-        slides[currentIndex].classList.add('active');
-        slides[currentIndex].classList.remove('prev');
+        // Reset all slides to default position (right side)
+        slides.forEach((slide, i) => {
+            slide.classList.remove('active', 'slide-left', 'slide-right');
+
+            if (i === currentIndex) {
+                // Current slide - center
+                slide.classList.add('active');
+            } else if (i < currentIndex) {
+                // Previous slides - left side
+                slide.classList.add('slide-left');
+            } else {
+                // Next slides - right side (default)
+                slide.classList.add('slide-right');
+            }
+        });
 
         // Update UI
         updateDots();
@@ -73,12 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         setTimeout(() => {
             isAnimating = false;
-            // Clean up prev class from all slides
-            slides.forEach(slide => {
-                if (slide !== slides[currentIndex]) {
-                    slide.classList.remove('prev');
-                }
-            });
         }, 600);
     }
 
