@@ -1,137 +1,215 @@
-// 캐릭터 캐러셀 초기화
+// Modern Vertical Character Carousel
 document.addEventListener('DOMContentLoaded', function() {
-    const track = document.getElementById('carouselTrack');
-    const prevBtn = document.getElementById('prevBtn');
-    const nextBtn = document.getElementById('nextBtn');
-    const indicatorsContainer = document.getElementById('indicators');
-    const slides = document.querySelectorAll('.carousel-slide');
+    const container = document.getElementById('container');
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.getElementById('dotsContainer');
+    const progressBar = document.getElementById('progressBar');
+    const swipeHint = document.getElementById('swipeHint');
     const totalSlides = slides.length;
 
     let currentIndex = 0;
-    let startX = 0;
-    let currentX = 0;
+    let startY = 0;
+    let currentY = 0;
     let isDragging = false;
-    let startTransform = 0;
+    let isAnimating = false;
 
-    // 인디케이터 생성
-    function createIndicators() {
+    // Create navigation dots
+    function createDots() {
         for (let i = 0; i < totalSlides; i++) {
-            const indicator = document.createElement('div');
-            indicator.classList.add('indicator');
-            if (i === 0) indicator.classList.add('active');
-            indicator.addEventListener('click', () => goToSlide(i));
-            indicatorsContainer.appendChild(indicator);
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
         }
     }
 
-    // 슬라이드 이동
-    function goToSlide(index) {
-        if (index < 0) {
-            currentIndex = 0;
-        } else if (index >= totalSlides) {
-            currentIndex = totalSlides - 1;
-        } else {
-            currentIndex = index;
-        }
-
-        const offset = -currentIndex * 100;
-        track.style.transform = `translateX(${offset}%)`;
-        updateIndicators();
-    }
-
-    // 인디케이터 업데이트
-    function updateIndicators() {
-        const indicators = document.querySelectorAll('.indicator');
-        indicators.forEach((indicator, index) => {
+    // Update navigation dots
+    function updateDots() {
+        const dots = document.querySelectorAll('.dot');
+        dots.forEach((dot, index) => {
             if (index === currentIndex) {
-                indicator.classList.add('active');
+                dot.classList.add('active');
             } else {
-                indicator.classList.remove('active');
+                dot.classList.remove('active');
             }
         });
     }
 
-    // 이전 슬라이드
-    function prevSlide() {
-        goToSlide(currentIndex - 1);
+    // Update progress bar
+    function updateProgress() {
+        const progress = ((currentIndex + 1) / totalSlides) * 100;
+        progressBar.style.setProperty('--progress', `${progress}%`);
+        progressBar.style.width = `${progress}%`;
     }
 
-    // 다음 슬라이드
-    function nextSlide() {
-        goToSlide(currentIndex + 1);
-    }
+    // Go to specific slide
+    function goToSlide(index) {
+        if (isAnimating || index < 0 || index >= totalSlides) return;
 
-    // 마우스/터치 드래그 시작
-    function handleDragStart(e) {
-        isDragging = true;
-        startX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-        const transform = window.getComputedStyle(track).transform;
-        if (transform !== 'none') {
-            const matrix = new DOMMatrix(transform);
-            startTransform = matrix.m41;
-        } else {
-            startTransform = 0;
+        isAnimating = true;
+
+        // Remove active class from current slide
+        slides[currentIndex].classList.remove('active');
+        if (index < currentIndex) {
+            slides[currentIndex].classList.add('prev');
         }
-        track.style.transition = 'none';
+
+        // Update current index
+        currentIndex = index;
+
+        // Add active class to new slide
+        slides[currentIndex].classList.add('active');
+        slides[currentIndex].classList.remove('prev');
+
+        // Update UI
+        updateDots();
+        updateProgress();
+
+        // Hide swipe hint after first interaction
+        if (swipeHint) {
+            swipeHint.classList.add('hidden');
+        }
+
+        setTimeout(() => {
+            isAnimating = false;
+            // Clean up prev class from all slides
+            slides.forEach(slide => {
+                if (slide !== slides[currentIndex]) {
+                    slide.classList.remove('prev');
+                }
+            });
+        }, 600);
     }
 
-    // 마우스/터치 드래그 중
-    function handleDragMove(e) {
-        if (!isDragging) return;
-        e.preventDefault();
-
-        currentX = e.type.includes('mouse') ? e.pageX : e.touches[0].pageX;
-        const diff = currentX - startX;
-        const newTransform = startTransform + diff;
-        track.style.transform = `translateX(${newTransform}px)`;
+    // Next slide
+    function nextSlide() {
+        if (currentIndex < totalSlides - 1) {
+            goToSlide(currentIndex + 1);
+        }
     }
 
-    // 마우스/터치 드래그 종료
-    function handleDragEnd(e) {
+    // Previous slide
+    function prevSlide() {
+        if (currentIndex > 0) {
+            goToSlide(currentIndex - 1);
+        }
+    }
+
+    // Touch/Mouse start
+    function handleStart(e) {
+        if (isAnimating) return;
+        isDragging = true;
+        startY = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
+    }
+
+    // Touch/Mouse move
+    function handleMove(e) {
+        if (!isDragging || isAnimating) return;
+
+        currentY = e.type.includes('mouse') ? e.pageY : e.touches[0].pageY;
+        const diff = startY - currentY;
+
+        // Prevent default scroll behavior
+        if (Math.abs(diff) > 10) {
+            e.preventDefault();
+        }
+    }
+
+    // Touch/Mouse end
+    function handleEnd(e) {
         if (!isDragging) return;
         isDragging = false;
 
-        track.style.transition = 'transform 0.5s ease-in-out';
-
-        const diff = currentX - startX;
-        const threshold = track.offsetWidth * 0.2; // 20% 이상 드래그시 슬라이드 변경
+        const diff = startY - currentY;
+        const threshold = 50; // Minimum swipe distance in pixels
 
         if (Math.abs(diff) > threshold) {
             if (diff > 0) {
-                prevSlide();
-            } else {
+                // Swiped up - next slide
                 nextSlide();
+            } else {
+                // Swiped down - previous slide
+                prevSlide();
             }
-        } else {
-            goToSlide(currentIndex);
         }
     }
 
-    // 이벤트 리스너 등록
-    prevBtn.addEventListener('click', prevSlide);
-    nextBtn.addEventListener('click', nextSlide);
+    // Mouse wheel handler
+    function handleWheel(e) {
+        if (isAnimating) return;
 
-    // 마우스 이벤트
-    track.addEventListener('mousedown', handleDragStart);
-    track.addEventListener('mousemove', handleDragMove);
-    track.addEventListener('mouseup', handleDragEnd);
-    track.addEventListener('mouseleave', handleDragEnd);
+        e.preventDefault();
 
-    // 터치 이벤트
-    track.addEventListener('touchstart', handleDragStart, { passive: false });
-    track.addEventListener('touchmove', handleDragMove, { passive: false });
-    track.addEventListener('touchend', handleDragEnd);
-
-    // 키보드 네비게이션
-    document.addEventListener('keydown', function(e) {
-        if (e.key === 'ArrowLeft') {
-            prevSlide();
-        } else if (e.key === 'ArrowRight') {
+        if (e.deltaY > 0) {
             nextSlide();
+        } else if (e.deltaY < 0) {
+            prevSlide();
         }
-    });
+    }
 
-    // 초기화
-    createIndicators();
-    goToSlide(0);
+    // Keyboard navigation
+    function handleKeyboard(e) {
+        if (isAnimating) return;
+
+        switch(e.key) {
+            case 'ArrowDown':
+            case 'PageDown':
+                e.preventDefault();
+                nextSlide();
+                break;
+            case 'ArrowUp':
+            case 'PageUp':
+                e.preventDefault();
+                prevSlide();
+                break;
+            case 'Home':
+                e.preventDefault();
+                goToSlide(0);
+                break;
+            case 'End':
+                e.preventDefault();
+                goToSlide(totalSlides - 1);
+                break;
+        }
+    }
+
+    // Event listeners
+    // Touch events
+    container.addEventListener('touchstart', handleStart, { passive: true });
+    container.addEventListener('touchmove', handleMove, { passive: false });
+    container.addEventListener('touchend', handleEnd, { passive: true });
+
+    // Mouse events
+    container.addEventListener('mousedown', handleStart);
+    container.addEventListener('mousemove', handleMove);
+    container.addEventListener('mouseup', handleEnd);
+    container.addEventListener('mouseleave', handleEnd);
+
+    // Wheel event
+    container.addEventListener('wheel', handleWheel, { passive: false });
+
+    // Keyboard events
+    document.addEventListener('keydown', handleKeyboard);
+
+    // Initialize
+    createDots();
+    updateProgress();
+
+    // Hide swipe hint after 3 seconds
+    setTimeout(() => {
+        if (swipeHint && currentIndex === 0) {
+            swipeHint.style.opacity = '0';
+            setTimeout(() => {
+                swipeHint.classList.add('hidden');
+            }, 300);
+        }
+    }, 3000);
+
+    // Prevent pull-to-refresh on mobile
+    document.body.addEventListener('touchmove', function(e) {
+        if (e.touches.length > 1) {
+            e.preventDefault();
+        }
+    }, { passive: false });
 });

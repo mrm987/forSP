@@ -2,82 +2,160 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>캐릭터 소개</title>
     <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="carousel-container">
-        <h1 class="title">캐릭터 소개</h1>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1 class="logo">CHARACTERS</h1>
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
+    </header>
 
-        <div class="carousel">
-            <div class="carousel-track" id="carouselTrack">
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="13-1.png" alt="캐릭터 1">
-                        <div class="character-info">
-                            <h2>캐릭터 1</h2>
-                            <p>첫 번째 캐릭터 소개</p>
-                        </div>
-                    </div>
+    <!-- Main Container -->
+    <div class="container" id="container">
+        <!-- Character Slide 1 -->
+        <section class="slide active" data-index="0">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="13-1.png" alt="캐릭터 1" class="character-image">
+                    <div class="image-overlay"></div>
                 </div>
-
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="90391e0d5db83906.png" alt="캐릭터 2">
-                        <div class="character-info">
-                            <h2>캐릭터 2</h2>
-                            <p>두 번째 캐릭터 소개</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="9a28951b49c55442.png" alt="캐릭터 3">
-                        <div class="character-info">
-                            <h2>캐릭터 3</h2>
-                            <p>세 번째 캐릭터 소개</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="c4516e7a8fd7dbe3.png" alt="캐릭터 4">
-                        <div class="character-info">
-                            <h2>캐릭터 4</h2>
-                            <p>네 번째 캐릭터 소개</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="d60b0a9d52816636.png" alt="캐릭터 5">
-                        <div class="character-info">
-                            <h2>캐릭터 5</h2>
-                            <p>다섯 번째 캐릭터 소개</p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="carousel-slide">
-                    <div class="character-card">
-                        <img src="f96cf7785c6da2f0.png" alt="캐릭터 6">
-                        <div class="character-info">
-                            <h2>캐릭터 6</h2>
-                            <p>여섯 번째 캐릭터 소개</p>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">01</span>
+                        <h2 class="character-name">박지원</h2>
+                        <p class="character-desc">뛰어난 전략가이자 팀의 리더</p>
+                        <div class="character-tags">
+                            <span class="tag">리더십</span>
+                            <span class="tag">전략가</span>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <button class="carousel-button prev" id="prevBtn">&#10094;</button>
-        <button class="carousel-button next" id="nextBtn">&#10095;</button>
+        <!-- Character Slide 2 -->
+        <section class="slide" data-index="1">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="90391e0d5db83906.png" alt="캐릭터 2" class="character-image">
+                    <div class="image-overlay"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">02</span>
+                        <h2 class="character-name">픽셀</h2>
+                        <p class="character-desc">디지털 세계의 마법사</p>
+                        <div class="character-tags">
+                            <span class="tag">테크</span>
+                            <span class="tag">창의적</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
 
-        <div class="carousel-indicators" id="indicators"></div>
+        <!-- Character Slide 3 -->
+        <section class="slide" data-index="2">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="9a28951b49c55442.png" alt="캐릭터 3" class="character-image">
+                    <div class="image-overlay"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">03</span>
+                        <h2 class="character-name">란 팡마오</h2>
+                        <p class="character-desc">동양의 신비를 간직한 전사</p>
+                        <div class="character-tags">
+                            <span class="tag">무술</span>
+                            <span class="tag">명상</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Character Slide 4 -->
+        <section class="slide" data-index="3">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="c4516e7a8fd7dbe3.png" alt="캐릭터 4" class="character-image">
+                    <div class="image-overlay"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">04</span>
+                        <h2 class="character-name">아델</h2>
+                        <p class="character-desc">고귀한 혈통의 검술 명인</p>
+                        <div class="character-tags">
+                            <span class="tag">검술</span>
+                            <span class="tag">고귀함</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Character Slide 5 -->
+        <section class="slide" data-index="4">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="d60b0a9d52816636.png" alt="캐릭터 5" class="character-image">
+                    <div class="image-overlay"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">05</span>
+                        <h2 class="character-name">@반달</h2>
+                        <p class="character-desc">달빛 아래 춤추는 신비로운 존재</p>
+                        <div class="character-tags">
+                            <span class="tag">신비</span>
+                            <span class="tag">우아함</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Character Slide 6 -->
+        <section class="slide" data-index="5">
+            <div class="slide-content">
+                <div class="image-wrapper">
+                    <img src="f96cf7785c6da2f0.png" alt="캐릭터 6" class="character-image">
+                    <div class="image-overlay"></div>
+                </div>
+                <div class="info-panel">
+                    <div class="info-content">
+                        <span class="character-number">06</span>
+                        <h2 class="character-name">미스틱</h2>
+                        <p class="character-desc">숨겨진 힘을 가진 신비의 전사</p>
+                        <div class="character-tags">
+                            <span class="tag">열정적</span>
+                            <span class="tag">강력함</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Navigation Dots -->
+    <div class="dots-container" id="dotsContainer"></div>
+
+    <!-- Swipe Hint -->
+    <div class="swipe-hint" id="swipeHint">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5L12 19M12 19L19 12M12 19L5 12" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>스와이프하세요</span>
     </div>
 
     <script src="script.js"></script>
