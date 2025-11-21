@@ -121,11 +121,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!isDragging) return;
         isDragging = false;
 
-        const diff = startX - currentX;
+        const diff = currentX - startX;
         const threshold = 50; // Minimum swipe distance in pixels
 
         if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
+            if (diff < 0) {
                 // Swiped left - next slide
                 nextSlide();
             } else {
