@@ -120,11 +120,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const threshold = 50; // Minimum swipe distance in pixels
 
         if (Math.abs(diff) > threshold) {
-            if (diff > 0) {
-                // Swiped right - next slide
+            if (diff < 0) {
+                // Swiped left - next slide
                 nextSlide();
             } else {
-                // Swiped left - previous slide
+                // Swiped right - previous slide
                 prevSlide();
             }
         }
